@@ -1,56 +1,44 @@
 # main.py
-# Archivo principal: importa las piezas del paquete "blog" y coordina el menú.
+# Punto de entrada: carga los datos, crea el Blog y coordina el menú.
 
-from blog.datos import posts
-from blog.menu import mostrar_menu, pedir_texto
+from blog.datos import cargar_posts, guardar_posts, obtener_autor_principal
+from blog.menu import mostrar_menu, confirmar
+from blog.modelos import Blog
 from blog.operaciones import (
-    listar_posts,
-    buscar_por_titulo,
-    filtrar_por_tag,
-    mostrar_posts,
+    ver_posts,
+    buscar_posts,
+    filtrar_posts,
+    crear_post,
+    validar_posts,
+    guardar,
 )
-from blog.validaciones import validar_post
 
 
-def opcion_buscar(lista):
-    """Pide un término y muestra los posts encontrados."""
-    termino = pedir_texto("Buscar por titulo: ")
-    if termino is None:
-        return
-    encontrados = buscar_por_titulo(lista, termino)
-    if encontrados:
-        print(f'\nPosts que contienen "{termino}":')
-        mostrar_posts(encontrados)
-    else:
-        print(f'No se encontraron posts con "{termino}".')
-
-
-def opcion_filtrar(lista):
-    """Pide un tag y muestra los posts que lo tienen."""
-    tag = pedir_texto("Ingresá un tag: ")
-    if tag is None:
-        return
-    encontrados = filtrar_por_tag(lista, tag)
-    if encontrados:
-        print(f"\nPosts con el tag {tag}:")
-        mostrar_posts(encontrados)
-    else:
-        print(f'No hay posts con el tag "{tag}".')
-
-
-def opcion_validar(lista):
-    """Valida cada post y muestra si es válido o qué errores tiene."""
-    print("\nValidación de posts:")
-    for numero, post in enumerate(lista, start=1):
-        es_valido, mensaje = validar_post(post)
-        if es_valido:
-            print(f"Post {numero}: válido")
-        else:
-            print(f"Post {numero}: error - {mensaje}")
+def salir(blog):
+    """Opción 7: ofrece guardar si hay cambios y se despide."""
+    if blog.hay_cambios:
+        pregunta = "Hay cambios sin guardar. ¿Guardar antes de salir? (s/n): "
+        if confirmar(pregunta):
+            if guardar_posts(blog):
+                print("Cambios guardados en posts.json.")
+    print("Gracias por usar el sistema del blog. ¡Hasta luego!")
 
 
 def ejecutar():
-    """Bucle principal: muestra el menú hasta que el usuario elija salir."""
+    """Crea la instancia de Blog y mantiene el menú activo hasta salir."""
+    # Al iniciar se leen los posts de posts.json y se convierten en objetos
+    blog = Blog("Blog de Nerea", obtener_autor_principal(), cargar_posts())
+
+    # Cada opción del menú llama a una función que usa los métodos del Blog
+    acciones = {
+        1: ver_posts,
+        2: buscar_posts,
+        3: filtrar_posts,
+        4: crear_post,
+        5: validar_posts,
+        6: guardar,
+    }
+
     while True:
         opcion = mostrar_menu()
 
@@ -58,19 +46,13 @@ def ejecutar():
         if opcion is None:
             continue
 
-        if opcion == 1:
-            listar_posts(posts)
-        elif opcion == 2:
-            opcion_buscar(posts)
-        elif opcion == 3:
-            opcion_filtrar(posts)
-        elif opcion == 4:
-            opcion_validar(posts)
-        elif opcion == 5:
-            print("Gracias por usar el sistema del blog. ¡Hasta luego!")
+        if opcion in acciones:
+            acciones[opcion](blog)
+        elif opcion == 7:
+            salir(blog)
             break
         else:
-            # Número fuera del rango 1 a 5
+            # Número fuera del rango 1 a 7
             print("Opción inválida, intenta de nuevo")
 
 

@@ -1,46 +1,58 @@
 # blog/validaciones.py
-# Reglas lógicas del sistema: validación de la estructura de los posts.
+# Reglas lógicas del sistema: estados válidos y validación de posts.
+# Este módulo no importa nada del paquete para evitar imports circulares.
 
-from blog.datos import estados_post
+# Estados posibles de un post: tupla con valores fijos del sistema
+estados_post = ("borrador", "publicado", "archivado")
 
-# Claves que todo post debe tener
-CLAVES_OBLIGATORIAS = ("id", "titulo", "contenido", "autor", "tags", "estado")
+# Claves que debe tener un post guardado en JSON
+CLAVES_POST = ("id", "titulo", "contenido", "autor", "tags", "estado")
 
 
-def validar_post(post):
-    """Retorna (True, "válido") o (False, mensaje con los errores)."""
-    if not isinstance(post, dict):
-        return False, "el post no es un diccionario"
+def validar_datos_post(datos):
+    """Revisa un diccionario leído del JSON antes de convertirlo en objeto.
+
+    Retorna una lista de errores (vacía si el diccionario está completo).
+    """
+    if not isinstance(datos, dict):
+        return ["no es un diccionario"]
 
     errores = []
-
-    # 1. Claves obligatorias: se verifican con "in" antes de usarlas
-    for clave in CLAVES_OBLIGATORIAS:
-        if clave not in post:
+    # Se verifica con "in" que existan las claves antes de usarlas
+    for clave in CLAVES_POST:
+        if clave not in datos:
             errores.append(f'falta la clave "{clave}"')
 
-    # 2. Título y contenido no vacíos
-    for campo in ("titulo", "contenido"):
-        if campo in post:
-            valor = post[campo]
-            if not isinstance(valor, str) or valor.strip() == "":
-                errores.append(f'"{campo}" está vacío')
-
-    # 3. El autor debe ser un diccionario con la clave "nombre"
-    if "autor" in post:
-        autor = post["autor"]
+    autor = datos.get("autor")
+    if "autor" in datos:
         if not isinstance(autor, dict):
             errores.append('"autor" no es un diccionario')
         elif "nombre" not in autor:
             errores.append('el autor no tiene la clave "nombre"')
+    return errores
 
-    # 4. Los tags deben ser una lista
-    if "tags" in post and not isinstance(post["tags"], list):
+
+def validar_post(post):
+    """Valida un objeto Post. Retorna (True, "válido") o (False, errores)."""
+    errores = []
+
+    # getattr() evita un AttributeError si al objeto le falta un atributo
+    titulo = getattr(post, "titulo", None)
+    contenido = getattr(post, "contenido", None)
+    autor = getattr(post, "autor", None)
+    tags = getattr(post, "tags", None)
+    estado = getattr(post, "estado", None)
+
+    if not isinstance(titulo, str) or titulo.strip() == "":
+        errores.append("el título está vacío")
+    if not isinstance(contenido, str) or contenido.strip() == "":
+        errores.append("el contenido está vacío")
+    if not getattr(autor, "nombre", ""):
+        errores.append("el autor no tiene nombre")
+    if not isinstance(tags, list):
         errores.append('"tags" no es una lista')
-
-    # 5. El estado debe pertenecer a la tupla estados_post
-    if "estado" in post and post["estado"] not in estados_post:
-        errores.append(f'estado "{post["estado"]}" no es válido')
+    if estado not in estados_post:
+        errores.append(f'el estado "{estado}" no es válido')
 
     if errores:
         return False, "; ".join(errores)

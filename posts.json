@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "titulo": "Primeros pasos con Python",
+    "contenido": "Cómo empezar a programar con Python desde cero.",
+    "autor": {
+      "nombre": "Nerea Onieva",
+      "bio": "Estudiante de IA y entusiasta de la automatización.",
+      "especialidad": "Python e IA aplicada a procesos",
+      "redes_sociales": [
+        "@nerea_dev",
+        "@nerea_python"
+      ]
+    },
+    "tags": [
+      "Python",
+      "Principiantes"
+    ],
+    "estado": "publicado"
+  },
+  {
+    "id": 2,
+    "titulo": "Cómo la IA puede optimizar procesos logísticos",
+    "contenido": "Ideas para aplicar IA en el picking y el despacho.",
+    "autor": {
+      "nombre": "Nerea Onieva",
+      "bio": "Estudiante de IA y entusiasta de la automatización.",
+      "especialidad": "Python e IA aplicada a procesos",
+      "redes_sociales": [
+        "@nerea_dev",
+        "@nerea_python"
+      ]
+    },
+    "tags": [
+      "IA",
+      "Automatización",
+      "Logística"
+    ],
+    "estado": "borrador"
+  },
+  {
+    "id": 3,
+    "titulo": "Organizando datos con diccionarios",
+    "contenido": "Los diccionarios guardan datos con pares clave-valor.",
+    "autor": {
+      "nombre": "Nerea Onieva",
+      "bio": "Estudiante de IA y entusiasta de la automatización.",
+      "especialidad": "Python e IA aplicada a procesos",
+      "redes_sociales": [
+        "@nerea_dev",
+        "@nerea_python"
+      ]
+    },
+    "tags": [
+      "Python",
+      "Diccionarios"
+    ],
+    "estado": "archivado"
+  },
+  {
+    "id": 4,
+    "titulo": "",
+    "autor": {
+      "nombre": "Nerea Onieva",
+      "bio": "Estudiante de IA y entusiasta de la automatización.",
+      "especialidad": "Python e IA aplicada a procesos",
+      "redes_sociales": [
+        "@nerea_dev",
+        "@nerea_python"
+      ]
+    },
+    "tags": [
+      "Python"
+    ],
+    "estado": "publicado"
+  },
+  {
+    "id": 5,
+    "titulo": "Módulos y paquetes en Python",
+    "contenido": "Cómo dividir un proyecto en varios archivos.",
+    "autor": {
+      "nombre": "Nerea Onieva",
+      "bio": "Estudiante de IA y entusiasta de la automatización.",
+      "especialidad": "Python e IA aplicada a procesos",
+      "redes_sociales": [
+        "@nerea_dev",
+        "@nerea_python"
+      ]
+    },
+    "tags": "Python",
+    "estado": "pendiente"
+  }
+]
